@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, request
 import requests
 import json
 from bs4 import BeautifulSoup
@@ -7,6 +7,7 @@ import os
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
+from app.models.product import Product 
 
 def get_item(ancestor, selector, attribute=None, return_list=False):
     try:
@@ -32,14 +33,16 @@ selectors = {
 }
 
 @app.route('/')
-@app.route('/index')
-@app.route('/index/<name>')
-def index(name="Hello World"):
-    return render_template("index.html.jinja", text=name)
+def index():
+    return render_template("index.html.jinja")
 
-@app.route('/extract', methods=("POST","GET"))
+@app.route('/extract', methods=["POST", "GET"])
 def extract():
-    if requests.method == "POST":
+    if request.method == "POST":
+        product_id = request.form.get("product_id")
+        product = Product(product_id)
+        product.extract_product()
+        
         url = f"https://www.ceneo.pl/{product_id}#tab=reviews"
         all_opinions = []
         while(url):
