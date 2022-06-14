@@ -7,6 +7,6 @@ selectors = {
     "useless": ["button.vote-no > span"],
     "publish_date": ["span.user-post__published > time:nth-child(1)", "datetime"],
     "purchase_date": ["span.user-post__published > time:nth-child(2)", "datetime"],
-    "pros": ["div[class$=positives]~ div.review-feature__item", None, True],
-    "cons": ["div[class$=negatives]~ div.review-feature__item", None, True]
+    "pros": ["div[class$=positives] ~ div.review-feature__item", None, True],
+    "cons": ["div[class$=negatives] ~ div.review-feature__item", None, True]
 }
