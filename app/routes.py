@@ -7,7 +7,10 @@ import os
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
-from app.models.product import Product 
+from app.models.product import Product
+
+if not os.path.exists('app/opinions'):
+    os.makedirs('app/opinions')
 
 def get_item(ancestor, selector, attribute=None, return_list=False):
     try:
@@ -33,16 +36,16 @@ selectors = {
 }
 
 @app.route('/')
-def index():
-    return render_template("index.html.jinja")
 
-@app.route('/extract', methods=["POST", "GET"])
+def index(name="Hello World"):
+    return render_template("index.html.jinja", text=name)
+
+@app.route('/extract', methods=('POST', 'GET'))
 def extract():
-    if request.method == "POST":
-        product_id = request.form.get("product_id")
+    if request.method == 'POST':
+        product_id = request.form.get('product_id')
         product = Product(product_id)
-        product.extract_product()
-        
+        product = 
         url = f"https://www.ceneo.pl/{product_id}#tab=reviews"
         all_opinions = []
         while(url):
@@ -64,9 +67,9 @@ def extract():
                 os.makedirs("app/opinions")
             with open(f"app/opinions/{product_id}.json", "w", encoding="UTF-8") as jf:
                 json.dump(all_opinions, jf, indent=4, ensure_ascii=False)
-        return redirect(url_for("product", product_id=product_id))
+            return redirect(url_for("product", product_id=product_id))
     else:
-        return render_template("extract.html.jinja")
+        return render_template('extract.html.jinja')
 
 @app.route('/products')
 def products():
@@ -75,7 +78,7 @@ def products():
 
 @app.route('/author')
 def author():
-    return render_template("author.html.jinja")
+    return render_template('author.html.jinja')
 
 @app.route('/product/<product_id>')
 def product(product_id):
